@@ -57,7 +57,7 @@ switch (cli.command) {
       cli.debug('Fetching tweets');
       var t = new tc.TweetsCollection(db);
       var d = new dc.DocumentsCollection(db);
-      t.get(cli.args[0], cli.options.num, function(){
+      t.fetch(cli.args[0], cli.options.num, function(){
         t.getRealUrls(function(){
           d.update('reada', 'getReadability', function(){
             d.update('viewtext', 'getViewText', function(){

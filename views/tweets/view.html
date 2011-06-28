@@ -1,0 +1,16 @@
+<h1>Tweet</h1>
+{{#doc}}
+<div class="tweet_detail">
+  <div class="tweet_metas">
+    <p><a href="http://twitter.com/#!/{{from_user}}" alt="{{from_user}}"><img src="{{profile_image_url}}" alt="{{from_user}}" title="{{form_user}}" /></a></p>
+    <p><a href="http://twitter.com/#!/{{from_user}}" alt="{{from_user}}"><em>{{from_user}}</em></a></p>
+    <p>Envoyé le <a href="http://twitter.com/#!/{{from_user}}/status/{{id_str}}" alt="{{from_user}}">{{created_at}}</a></p>
+  </div>
+  <p>{{text}}</p>
+  <ul>
+    {{#urls}}
+    <li><a href="/documents/{{long_url}}">{{long_url}}</a></li>
+    {{/urls}}
+  </ul>
+</div>
+{{/doc}}
