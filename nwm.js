@@ -90,6 +90,10 @@ switch (cli.command) {
     d.update('calais', 'getCalais');
     break;
   case 'test':
+    var alchemy = require('./lib/alchemy.js');
+    alchemy = new alchemy(config.data.alchemy);
+    alchemy.get(cli.args[0], function(res){debug(res);});
+    /*
     db.open(function(err, db) {
       db.collection('documents', function(err, collection) {
         collection.findOne({}, function(err, doc) {
@@ -97,6 +101,7 @@ switch (cli.command) {
         });
       });
     });
+    */
     break;
   default:
     break;

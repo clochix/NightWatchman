@@ -1,5 +1,6 @@
 var config = module.exports = {};
 
 config.data = {
-  calais: '' // Put here your OpenCalais API key
+  calais: '', // Put here your OpenCalais API key
+  alchemy: '' // Your AlchemyAPI key
 };

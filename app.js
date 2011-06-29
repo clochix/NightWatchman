@@ -1,12 +1,13 @@
 /**
  * Module dependencies.
  */
+var config  = require('./config');
+var dc      = require('./lib/documents_collection');
 var express = require('express');
+var jsv     = require('./lib/jsonview.js');
 var mongodb = require("mongodb");
 var stache  = require('./lib/stache');
 var tc      = require('./lib/tweets_collection');
-var dc      = require('./lib/documents_collection');
-var jsv     = require('./lib/jsonview.js');
 
 var app = module.exports = express.createServer();
 
@@ -47,7 +48,7 @@ app.get(/^\/(documents|tweets)(?:\/(.+$))?/, function(req, res){
     col.get(req.params[1], function(doc) {
       if (!doc) {
         res.send('No ' + objName + ' with id ' + req.params[1], 404);
-      };
+      }
       var jsonFormatter = new jsv.JSONFormatter();
       res.render(objName + '/view.html', {
         locals: {
@@ -71,6 +72,21 @@ app.get(/^\/(documents|tweets)(?:\/(.+$))?/, function(req, res){
     }, function(){
     });
   }
+});
+app.get(/^\/(alchemy|calais)(?:\/(.+$))/, function(req, res){
+  //@FIXME: add Calais support: Calais need content, not an URL
+  var lib = require('./lib/' + req.params[0] + '.js');
+  lib = new lib(config.data[req.params[0]]);
+  lib.get(req.params[1], function(doc){
+    var jsonFormatter = new jsv.JSONFormatter();
+    res.render('test/view.html', {
+      locals: {
+                escaped: jsonFormatter.jsonToHTML(doc)
+              },
+      partials: {},
+      layout: !req.xhr
+    });
+  });
 });
 app.get('*', function(req, res){
   res.send('404', 404);
