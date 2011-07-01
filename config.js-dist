@@ -1,6 +1,10 @@
 var config = module.exports = {};
 
 config.data = {
-  calais: '', // Put here your OpenCalais API key
-  alchemy: '' // Your AlchemyAPI key
+  // application configuration
+  fetch_missing: true, // if a tweet or document is not in the database, fetch it
+  // API keys
+  calais: '',  // Put here your OpenCalais API key
+  alchemy: '', // Your AlchemyAPI key
+  amplify: ''  // OpenAmplify API key
 };

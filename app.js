@@ -45,19 +45,21 @@ app.get(/^\/(documents|tweets)(?:\/(.+$))?/, function(req, res){
   var col = require('./lib/' + objName + '_collection')[colName];
   col = new col(db);
   if (req.params[1]) {
-    col.get(req.params[1], function(doc) {
+    var method = (config.data.fetch_missing === true ? 'getOrFetch' : 'get');
+    col[method](req.params[1], function(doc) {
       if (!doc) {
         res.send('No ' + objName + ' with id ' + req.params[1], 404);
+      } else {
+        var jsonFormatter = new jsv.JSONFormatter();
+        res.render(objName + '/view.html', {
+          locals: {
+                    doc: doc,
+          escaped: jsonFormatter.jsonToHTML(doc)
+                  },
+          partials: {},
+          layout: !req.xhr
+        });
       }
-      var jsonFormatter = new jsv.JSONFormatter();
-      res.render(objName + '/view.html', {
-        locals: {
-                  doc: doc,
-                  escaped: jsonFormatter.jsonToHTML(doc)
-                },
-        partials: {},
-        layout: !req.xhr
-      });
     }, function(){
     });
   } else {
@@ -73,18 +75,25 @@ app.get(/^\/(documents|tweets)(?:\/(.+$))?/, function(req, res){
     });
   }
 });
-app.get(/^\/(alchemy|calais)(?:\/(.+$))/, function(req, res){
-  //@FIXME: add Calais support: Calais need content, not an URL
-  var lib = require('./lib/' + req.params[0] + '.js');
-  lib = new lib(config.data[req.params[0]]);
-  lib.get(req.params[1], function(doc){
-    var jsonFormatter = new jsv.JSONFormatter();
-    res.render('test/view.html', {
-      locals: {
-                escaped: jsonFormatter.jsonToHTML(doc)
-              },
-      partials: {},
-      layout: !req.xhr
+app.get(/^\/(alchemy|amplify|calais)(?:\/(.+$))/, function(req, res){
+  var dc = require('./lib/documents_collection');
+  var col = new dc.DocumentsCollection(db);
+  col.getOrFetch(req.params[1], function(doc) {
+    var tmpDoc = {
+      url: doc.url,
+      text: doc.viewtext.content
+    };
+    var lib = require('./lib/' + req.params[0] + '.js');
+    lib = new lib(config.data[req.params[0]]);
+    lib.get(tmpDoc, function(doc){
+      var jsonFormatter = new jsv.JSONFormatter();
+      res.render('test/view.html', {
+        locals: {
+                  escaped: jsonFormatter.jsonToHTML(doc)
+                },
+        partials: {},
+        layout: !req.xhr
+      });
     });
   });
 });
