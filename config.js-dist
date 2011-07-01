@@ -6,5 +6,11 @@ config.data = {
   // API keys
   calais: '',  // Put here your OpenCalais API key
   alchemy: '', // Your AlchemyAPI key
-  amplify: ''  // OpenAmplify API key
+  amplify: '',  // OpenAmplify API key
+  twitter: {
+    consumer_key: '',
+    consumer_secret: '',
+    access_token_key: '',
+    access_token_secret: ''
+  }
 };

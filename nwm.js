@@ -75,7 +75,7 @@ switch (cli.command) {
     t.getRealUrls();
     break;
   case 'resolve':
-    nwm.getRealUrl(cli.args[0], function(){});
+    nwm.getRealUrl(cli.args[0], function(long_url){cli.info(long_url)});
     break;
   case 'readability':
     var d = new dc.DocumentsCollection(db);
